@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +66,12 @@ public class UserController {
         CommonResDto resDto = new CommonResDto(HttpStatus.OK, "로그인 성공", token);
 
         return new ResponseEntity<>(resDto, HttpStatus.OK);
+    }
+
+    // 회원 정보 조회 (마이페이지) -> 로그인 한 회원만이 요청할 수 있다.
+    @GetMapping("/myInfo")
+    public ResponseEntity<?> getMyInfo() {
+        return null;
     }
 
 }
