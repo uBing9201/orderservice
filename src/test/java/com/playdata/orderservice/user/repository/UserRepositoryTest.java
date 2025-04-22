@@ -1,7 +1,5 @@
 package com.playdata.orderservice.user.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.playdata.orderservice.common.entity.Address;
 import com.playdata.orderservice.user.entity.User;
 import jakarta.transaction.Transactional;
@@ -9,11 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(false)
 class UserRepositoryTest {
 
     @Autowired
