@@ -37,6 +37,6 @@ public class User {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Builder.Default // builder 패턴 사용해서 객체 초기화 시 전달한 값으로 세팅해 주라.
+    @Builder.Default // builder 패턴 사용해서 객체 초기화 시 초기값으로 세팅
     private Role role = Role.USER;
 }
