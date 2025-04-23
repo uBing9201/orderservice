@@ -3,6 +3,7 @@ package com.playdata.orderservice.user.controller;
 import com.playdata.orderservice.common.auth.JwtTokenProvider;
 import com.playdata.orderservice.common.dto.CommonResDto;
 import com.playdata.orderservice.user.dto.UserLoginReqDto;
+import com.playdata.orderservice.user.dto.UserResDto;
 import com.playdata.orderservice.user.dto.UserSaveReqDto;
 import com.playdata.orderservice.user.entity.User;
 import com.playdata.orderservice.user.service.UserService;
@@ -72,8 +73,10 @@ public class UserController {
     // 회원 정보 조회 (마이페이지) -> 로그인 한 회원만이 요청할 수 있습니다.
     @GetMapping("/myInfo")
     public ResponseEntity<?> getMyInfo() {
-        System.out.println("/user/myInfo: GET!");
-        return null;
+        UserResDto dto = userService.myInfo();
+        CommonResDto resDto = new CommonResDto(HttpStatus.OK, "myInfo 조회 성공", dto);
+
+        return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
 
 }
