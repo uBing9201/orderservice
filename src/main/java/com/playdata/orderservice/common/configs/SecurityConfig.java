@@ -1,6 +1,7 @@
 package com.playdata.orderservice.common.configs;
 
 import com.playdata.orderservice.common.auth.JwtAuthFilter;
+import com.playdata.orderservice.common.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ public class SecurityConfig {
 
     // 필터 등록을 위해서 객체가 필요 -> 빈 등록된 객체를 자동 주입.
     private final JwtAuthFilter jwtAuthFilter;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     // 시큐리티 기본 설정 (권한 처리, 초기 로그인 화면 없애기 등등...)
     @Bean // 이 메서드가 리턴하는 시큐리티 설정을 빈으로 등록하겠다.
@@ -45,6 +47,11 @@ public class SecurityConfig {
         // 스프링 시큐리티가 기본으로 세팅하는 여러가지 필터가 있는데요,
         // 내가 직접 만든 커스텀 필터가 해당 필터를 대체할 것이기 때문에, 그 필터 앞에 세워놓는 겁니다.
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // 인증 과정에서 예외가 발생할 경우 그 예외를 핸들링 할 객체를 등록
+        http.exceptionHandling(exception -> {
+            exception.authenticationEntryPoint(authenticationEntryPoint);
+        });
 
         // 설정한 HttpSecurity 객체를 기반으로 시큐리티 설정 구축 및 반환.
         return http.build();
