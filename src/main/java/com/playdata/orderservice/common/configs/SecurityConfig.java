@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,7 +22,7 @@ public class SecurityConfig {
 
     // 필터 등록을 위해서 객체가 필요 -> 빈 등록된 객체를 자동 주입.
     private final JwtAuthFilter jwtAuthFilter;
-    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     // 시큐리티 기본 설정 (권한 처리, 초기 로그인 화면 없애기 등등...)
     @Bean // 이 메서드가 리턴하는 시큐리티 설정을 빈으로 등록하겠다.
@@ -49,13 +51,18 @@ public class SecurityConfig {
         // 내가 직접 만든 커스텀 필터가 해당 필터를 대체할 것이기 때문에, 그 필터 앞에 세워놓는 겁니다.
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // 인증 과정에서 예외가 발생할 경우 그 예외를 핸들링 할 객체를 등록
+        //  인증 과정에서 예외가 발생할 경우 그 예외를 핸들링 할 객체를 등록
         http.exceptionHandling(exception -> {
-            exception.authenticationEntryPoint(authenticationEntryPoint);
+            exception.authenticationEntryPoint(customAuthenticationEntryPoint);
         });
 
         // 설정한 HttpSecurity 객체를 기반으로 시큐리티 설정 구축 및 반환.
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }
