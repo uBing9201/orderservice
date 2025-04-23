@@ -40,7 +40,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> {
             auth
 //                    .requestMatchers("/user/list").hasRole("ROLE_ADMIN")
-                    .requestMatchers("/user/create", "/user/doLogin").permitAll()
+                    .requestMatchers("/user/create", "/user/doLogin", "/product/list").permitAll()
                     .anyRequest().authenticated();
         });
         // "/user/create", "/user/doLogin"은 인증 검사가 필요 없다고 설정했고,
