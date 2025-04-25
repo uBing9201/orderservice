@@ -33,7 +33,7 @@ public class UserService {
         Optional<User> foundEmail
                 = userRepository.findByEmail(dto.getEmail());
 
-        if(foundEmail.isPresent()){
+        if (foundEmail.isPresent()) {
             // 이메일 존재? -> 이메일 중복 -> 회원가입 불가!
             // 예외를 일부러 생성시켜서 컨트롤러가 감지하게 할겁니다.
             throw new IllegalArgumentException("이미 존재하는 이메일 입니다!");
@@ -53,7 +53,7 @@ public class UserService {
         );
 
         // 비밀번호 확인하기 (암호화 되어있으니 encoder에게 부탁)
-        if(!encoder.matches(dto.getPassword(), user.getPassword())){
+        if (!encoder.matches(dto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -89,7 +89,9 @@ public class UserService {
 
     }
 
-    public void saveRefreshToken(String refreshToken) {
-
+    public User findById(String id) {
+        return userRepository.findById(Long.parseLong(id)).orElseThrow(
+                () -> new EntityNotFoundException("User not found!")
+        );
     }
 }
