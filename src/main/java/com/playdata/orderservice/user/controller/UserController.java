@@ -8,8 +8,10 @@ import com.playdata.orderservice.user.dto.UserSaveReqDto;
 import com.playdata.orderservice.user.entity.User;
 import com.playdata.orderservice.user.service.UserService;
 import jakarta.validation.Valid;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +30,7 @@ public class UserController {
     // 빈 등록된 서비스 객체를 자동으로 주입 받자!
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /*
      프론트 단에서 회원 가입 요청 보낼때 함께 보내는 데이터 (JSON) -> dto로 받자.
@@ -78,8 +81,9 @@ public class UserController {
         String refreshToken
                 = jwtTokenProvider.createRefreshToken(user.getEmail(), user.getRole().toString());
 
-        // refreshToken을 DB에 저장하자.
+        // refreshToken을 DB에 저장하자. (redis)
 //        userService.saveRefreshToken(user.getEmail(), refreshToken);
+        redisTemplate.opsForValue().set("user:refresh:" + user.getId(), refreshToken, 2, TimeUnit.MINUTES);
 
         // Map을 이용해서 사용자의 id와 token을 포장하자.
         Map<String, Object> loginInfo = new HashMap<>();
