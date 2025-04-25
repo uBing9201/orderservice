@@ -23,12 +23,11 @@ public class RedisConfig {
     // Redis 접속에 필요한 설정을 지정한 후 구현체를 빈으로 등록
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-
+        RedisStandaloneConfiguration configuration
+                = new RedisStandaloneConfiguration();
         configuration.setHostName(host);
         configuration.setPort(port);
-        configuration.setDatabase(1); // 1번 DB를 사용하겠다. default -> 0
-
+        configuration.setDatabase(1); // 1번 DB 사용하겠다. default -> 0
         return new LettuceConnectionFactory(configuration);
     }
 
@@ -43,8 +42,10 @@ public class RedisConfig {
         template.setKeySerializer(new StringRedisSerializer());
         // value는 JSON으로 직렬화 시키겠다.
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        // Redis 접속 정보를 template에게 전달해서 위에서 설정한 정보로 접속 후 사용
+        // Redis 접속 정보를 template에게 전달해서 위에서 설정한 정보로 접속 후 사용.
         template.setConnectionFactory(factory);
+
+        return template;
     }
 
 }
