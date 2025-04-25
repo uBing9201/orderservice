@@ -68,8 +68,18 @@ public class UserController {
         // 로그인 유지를 해 주고 싶다.
         // 백엔드는 요청이 들어왔을 때 이 사람이 이전에 로그인 성공 한 사람인지 알 수가 없다.
         // 징표를 하나 만들어 주겠다. -> JWT를 발급해서 클라이언트에게 전달해 주겠다!
+        // Access Token 발급 -> 수명이 짧습니다. (토큰 탈취 방지)
         String token
                 = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
+
+        // Refresh Token을 생성해 주겠다.
+        // Access Token 수명이 만료되었을 경우 Refresh Token을 확인해서 리프레시가 유효한 경우
+        // 로그인 없이 Access Token을 재발급 해주는 용도로 사용.
+        String refreshToken
+                = jwtTokenProvider.createRefreshToken(user.getEmail(), user.getRole().toString());
+
+        // refreshToken을 DB에 저장하자.
+//        userService.saveRefreshToken(user.getEmail(), refreshToken);
 
         // Map을 이용해서 사용자의 id와 token을 포장하자.
         Map<String, Object> loginInfo = new HashMap<>();
