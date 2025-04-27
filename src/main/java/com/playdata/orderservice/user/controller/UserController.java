@@ -135,7 +135,7 @@ public class UserController {
         log.info("obj: {}", obj);
         if (obj == null) { // refresh token이 수명이 다됨.
             return new ResponseEntity<>(new CommonErrorDto(
-                    HttpStatus.UNAUTHORIZED, "재 로그인 필요!"),
+                    HttpStatus.UNAUTHORIZED, "EXPIRED_RT"),
                     HttpStatus.UNAUTHORIZED);
         }
         // 새로운 access token을 발급
