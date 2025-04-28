@@ -6,6 +6,8 @@ import com.playdata.orderservice.product.dto.ProductSaveReqDto;
 import com.playdata.orderservice.product.dto.ProductSearchDto;
 import com.playdata.orderservice.product.entity.Product;
 import com.playdata.orderservice.product.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
+import java.net.MalformedURLException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -76,5 +78,16 @@ public class ProductService {
         return productList.stream()
                 .map(Product::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteById(Long id) throws Exception {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("product with id: " + id + " not found")
+        );
+
+        String imageUrl = product.getImagePath();
+        s3Config.deleteFromS3Bucket(imageUrl);
+
+        productRepository.deleteById(id);
     }
 }

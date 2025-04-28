@@ -6,15 +6,18 @@ import com.playdata.orderservice.product.dto.ProductSaveReqDto;
 import com.playdata.orderservice.product.dto.ProductSearchDto;
 import com.playdata.orderservice.product.entity.Product;
 import com.playdata.orderservice.product.service.ProductService;
+import java.net.MalformedURLException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -67,6 +70,18 @@ public class ProductContoller {
                 = new CommonResDto(HttpStatus.OK, "상품 리스트 정상 조회", dtoList);
 
         return ResponseEntity.ok().body(resDto);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteProduct(@RequestParam("id") Long id)
+            throws Exception {
+        log.info("deleteProduct: {}", id);
+        productService.deleteById(id);
+
+        CommonResDto dto = new CommonResDto(HttpStatus.OK, "삭제 완료", id);
+
+        return ResponseEntity.ok().body(dto);
     }
 
 }

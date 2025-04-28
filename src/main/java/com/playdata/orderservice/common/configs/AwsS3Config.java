@@ -1,6 +1,9 @@
 package com.playdata.orderservice.common.configs;
 
 import jakarta.annotation.PostConstruct;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -9,6 +12,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 // AWS에 연결해서 S3에 관련된 서비스를 실행하는 전용 객체
@@ -67,5 +71,27 @@ public class AwsS3Config {
                 .getUrl(b -> b.bucket(bucketName).key(fileName))
                 .toString();
 
+    }
+
+    // 버킷에 업로드 된 이미지를 삭제하는 로직
+    // 버킷에 오브젝트를 지우기 위해서는 키값을 줘야 하는데
+    // 우리가 가지고 있는 건 키가 아니라 url입니다.
+
+    // 우리가 가진 데이터: https://orderservice-prod-image-9201.s3.ap-northeast-2.amazonaws.com/28c7e71f-8c3b-422a-8b7a-b9ac475f2961_IMG_4544.jpg
+    // 가공 결과: 28c7e71f-8c3b-422a-8b7a-b9ac475f2961_IMG_4544.jpg
+    public void deleteFromS3Bucket(String imageUrl) throws Exception {
+
+        URL url = new URL(imageUrl);
+
+        // getPath()를 통해 key값 앞에 "/"를 포함해서 제거
+        String decodingKey = URLDecoder.decode(url.getPath(), "UTF-8");
+        String key = decodingKey.substring(1); // 앞에 / 떼기
+
+        DeleteObjectRequest request = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+
+        s3Client.deleteObject(request);
     }
 }
