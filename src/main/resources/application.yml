@@ -17,13 +17,21 @@ spring:
     redis:
       host: localhost
       port: 6379
+  # file upload setting
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+
 
 jwt:
   expiration: 1
   secretKey: rI9KLc/nWq+0ehvbQXjST52lIHi+A4PurdKwAe0ZcN+0LE1QBv7p0qhFx8wzt8PaigtMXpJHdIl6p4ILsLDasA==
 
   secretKeyRt: rI9KLc/nWq+0ehvbQXjST52lIHi+A4PurdKwAe0ZcN+0LE1QBv7p0qhFx8wzt8PaigtMXpJHdIl6p4ILsLDasA==
-  expirationRt: 30
+  expirationRt: 2
+
+
 
 # log level setting
 logging:
