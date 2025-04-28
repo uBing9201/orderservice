@@ -38,7 +38,7 @@ public class ProductService {
 
         // 특정 로컬 경로에 이미지를 전송하고, 그 경로를 Entity에 세팅하자.
         File file
-                = new File("/Users/stephen/Desktop/playdata_8th_develop/upload/" + uniqueFileName);
+                = new File("/Users/ubing/Desktop/playdata/update/" + uniqueFileName);
 
         try {
             productImage.transferTo(file);
