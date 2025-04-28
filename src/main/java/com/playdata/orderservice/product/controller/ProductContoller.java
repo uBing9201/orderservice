@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -30,7 +31,8 @@ public class ProductContoller {
     // 상품 등록 요청
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<?> createProduct(ProductSaveReqDto dto) {
+    public ResponseEntity<?> createProduct(ProductSaveReqDto dto)
+            throws IOException {
         /*
         상품 등록 요청은 여러 데이터와 함께 이미지가 전달될 것입니다.
         1. JS의 formData 객체를 통해 모든 데이터를 전달 (JSON 형태가 아니라, multipart/form-data 형식)
